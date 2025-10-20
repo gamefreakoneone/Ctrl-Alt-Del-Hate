@@ -1,1 +1,6 @@
 gold_benchmark_dataset.jsonl   
+.env
+gemma_baseline_outputs.jsonl
+test.jsonl
+train.jsonl
+val.jsonl
