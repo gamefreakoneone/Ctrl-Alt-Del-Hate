@@ -1,23 +1,27 @@
-import json, os, asyncio
+import json, os
 from tqdm import tqdm
-from google import genai
-import google.generativeai as genai
-from dotenv import load_dotenv
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import re
 
-# ========== CONFIG ==========
-load_dotenv()
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-model = genai.GenerativeModel("gemma-3-1b-it")
-
+# ==============================
+# CONFIG
+MODEL_NAME = "google/gemma-3-1b-it"
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 TEST_FILE = "../data/test.jsonl"
 OUTPUT_FILE = "./baseline_data/gemma_baseline_outputs.jsonl"
-BATCH_SIZE = 1
-SLEEP_TIME = 2
-# =============================
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+BATCH_SIZE = 5
+# ==============================
 
 SYSTEM_PROMPT = """You are an expert hate speech analyst. Your task is to analyze the provided text and return ONLY a valid JSON object that strictly adheres to the schema below. Do not include explanations, markdown, or any other text outside of the JSON object.
 
 --- IMPORTANT INSTRUCTIONS (READ CAREFULLY) ---
+Return ONLY a valid JSON object. 
+You must output the result in strict JSON syntax — 
+use curly braces `{}` and double quotes `"` for all keys and string values.
+Do NOT use YAML-like syntax, colons without quotes, triple dashes, or markdown.
+
 1. Produce a single numeric signed float value named "score" (e.g. -1.52, 0.00, 1.23).  
    - Use a NEGATIVE float for supportive content (e.g. -1.5).  
    - Use a POSITIVE float for hateful content (e.g. 1.52).  
@@ -108,87 +112,127 @@ Use integers from 0 to 4 for all facets based on this scale:
 
 --- TEXT TO ANALYZE ---
 {text}
-"""
+
+Return ONLY the JSON object. Do not say anything else."""
+
+# --------------------------
+# Load Model & Tokenizer
+# --------------------------
+tokenizer = AutoTokenizer.from_pretrained("google/gemma-3-1b-it")
+model = AutoModelForCausalLM.from_pretrained("google/gemma-3-1b-it")
+model.eval()
 
 
+# --------------------------
+# Load Data
+# --------------------------
 def load_data(path):
     with open(path, "r", encoding="utf-8") as f:
         return [json.loads(line) for line in f]
 
 
+# --------------------------
+# Inference Function
+# --------------------------
 def extract_json(text: str):
-    cleaned = text.strip()
-    cleaned = cleaned.replace("```json", "").replace("```", "").strip()
-
-    first_brace = cleaned.find("{")
-    last_brace = cleaned.rfind("}")
-    if first_brace == -1 or last_brace == -1:
+    """
+    Extract the first valid JSON object from model output text.
+    Handles extra tokens after or before JSON.
+    """
+    matches = list(re.finditer(r"\{", text))
+    if not matches:
         return None
-    candidate = cleaned[first_brace : last_brace + 1]
 
+    start = matches[0].start()
     stack = 0
-    for i, ch in enumerate(candidate):
-        if ch == "{":
+    end = None
+    for i in range(start, len(text)):
+        if text[i] == "{":
             stack += 1
-        elif ch == "}":
+        elif text[i] == "}":
             stack -= 1
             if stack == 0:
-                try:
-                    return json.loads(candidate[: i + 1])
-                except json.JSONDecodeError:
-                    continue
+                end = i + 1
+                break
+    if end is None:
+        return None
+
+    json_str = text[start:end]
     try:
-        return json.loads(candidate)
-    except Exception:
+        return json.loads(json_str)
+    except json.JSONDecodeError:
         return None
 
 
-async def analyze(entry):
-    prompt = SYSTEM_PROMPT.replace("{text}", entry["text"])
-    try:
-        response = await asyncio.to_thread(model.generate_content, prompt)
-        output = response.text.strip()
+def analyze(entry):
+    # Build a chat conversation for the instruction-tuned model
+    chat = [
+        {"role": "system", "content": "You are an expert hate speech analyst."},
+        {"role": "user", "content": SYSTEM_PROMPT.replace("{text}", entry["text"])},
+    ]
 
-        parsed = extract_json(output)
-        if parsed is None:
-            print(f"⚠️ Failed to parse JSON for {entry['comment_id']}")
-        try:
-            score = parsed["overall"]["score"]
-            if score > 0.5:
-                label = "hateful"
-            elif score < -1.0:
-                label = "supportive"
-            else:
-                label = "neutral"
-            parsed["overall"]["label"] = label
-        except Exception as e:
-            print(f"⚠️ Label generation error for {entry['comment_id']}: {e}")
+    # Apply the chat template to format the conversation
+    prompt = tokenizer.apply_chat_template(
+        chat, tokenize=False, add_generation_prompt=True
+    )
 
-        return {"id": entry["comment_id"], "prediction": parsed}
-    except Exception as e:
-        print(f"❌ Error on {entry['comment_id']}: {e}")
-        return {"id": entry["comment_id"], "prediction": None}
+    # Tokenize and run inference
+    inputs = tokenizer(
+        prompt, return_tensors="pt", truncation=True, max_length=2048
+    ).to(DEVICE)
+
+    with torch.no_grad():
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=1024,
+            do_sample=False,
+            eos_token_id=tokenizer.eos_token_id,
+        )
+
+    # Decode generated text
+    text_output = tokenizer.decode(
+        outputs[0][inputs["input_ids"].shape[1] :],
+        skip_special_tokens=True,
+        clean_up_tokenization_spaces=True,
+    ).strip()
+
+    print(text_output)
+
+    # Handle possible markdown/code formatting
+    if text_output.startswith("```"):
+        text_output = text_output.strip("`")
+        if text_output.startswith("json"):
+            text_output = text_output[len("json") :].strip()
+        text_output = text_output.replace("```", "").strip()
+
+    prediction = extract_json(text_output)
+
+    if prediction is None:
+        print(f"Failed to parse JSON for {entry['comment_id']}")
+
+    return {"id": entry["comment_id"], "prediction": prediction}
 
 
-async def run_inference(entries):
+# --------------------------
+# Run Inference
+# --------------------------
+def run_inference(entries):
     results = []
     with open(OUTPUT_FILE, "a", encoding="utf-8") as f:
         for i in tqdm(range(0, len(entries), BATCH_SIZE), desc="Running inference"):
             batch = entries[i : i + BATCH_SIZE]
-            batch_results = await asyncio.gather(*[analyze(e) for e in batch])
-            for result in batch_results:
+            for entry in batch:
+                result = analyze(entry)
                 results.append(result)
                 f.write(json.dumps(result) + "\n")
-            await asyncio.sleep(SLEEP_TIME)
     return results
 
 
-async def main():
+# --------------------------
+# Main
+# --------------------------
+if __name__ == "__main__":
     test_data = load_data(TEST_FILE)
     print(f"Loaded {len(test_data)} test samples")
-    await run_inference(test_data)
-    print(f"✅ Inference complete. Results written to {OUTPUT_FILE}")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
+    run_inference(test_data)
+    print(f"Inference complete. Results written to {OUTPUT_FILE}")
