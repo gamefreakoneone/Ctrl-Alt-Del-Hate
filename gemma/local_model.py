@@ -16,34 +16,52 @@ BATCH_SIZE = 5
 
 SYSTEM_PROMPT = """You are an expert hate speech analyst. Your task is to analyze the provided text and return ONLY a valid JSON object that strictly adheres to the schema below. Do not include explanations, markdown, or any other text outside of the JSON object.
 
---- IMPORTANT INSTRUCTIONS (READ CAREFULLY) ---
+=========================
+IMPORTANT INSTRUCTIONS
+=========================
 Return ONLY a valid JSON object. 
 You must output the result in strict JSON syntax — 
 use curly braces `{}` and double quotes `"` for all keys and string values.
 Do NOT use YAML-like syntax, colons without quotes, triple dashes, or markdown.
 
-1. Produce a single numeric signed float value named "score" (e.g. -1.52, 0.00, 1.23).  
-   - Use a NEGATIVE float for supportive content (e.g. -1.5).  
-   - Use a POSITIVE float for hateful content (e.g. 1.52).  
-   - Use a value CLOSE TO ZERO for neutral content (e.g. -0.10, 0.00, 0.25).  
-   - The score must be a standard JSON number (not a string).
+1. The output must be **valid JSON**, with no markdown or extra commentary.
+2. Use the exact field names and types described below.
+3. Each value must follow its correct type:
+   - Floats → only for `score`
+   - Integers → only for all values in `facets` (must be whole numbers, not floats)
+   - Booleans → only for all values in `targets` (`true` or `false`, lowercase)
 
-2. Return ONLY valid JSON. No surrounding text, no markdown, no explanation.
+=========================
+OVERALL SCORE
+=========================
+Produce a single signed float named `"score"` inside `"overall"`. Example:
+- NEGATIVE float for supportive content → e.g. `-1.35`
+- POSITIVE float for hateful content → e.g. `1.47`
+- NEAR ZERO float for neutral content → e.g. `0.12`, `-0.08`
+Must be a **standard JSON number**, not a string (e.g. `0.32`, not `"0.32"`).
 
---- SCORING RUBRIC ---
-Use integers from 0 to 4 for all facets based on this scale:
-0 = Absent
-1 = Mild
-2 = Clear
-3 = Severe
-4 = Extreme
+=========================
+FACETS (0-4 SCALE)
+=========================
+Each facet must be an **integer** from 0 to 4 (no decimals).  
+Use this scale strictly:
+- 0 = Absent  
+- 1 = Mild  
+- 2 = Clear  
+- 3 = Severe  
+- 4 = Extreme  
 
---- SCHEMA DEFINITIONS ---
-1. overall.score: A signed continuous float (negative for supportive, positive for hateful, near-zero for neutral). This must appear first in the overall object.
-2. facets: 10 integer fields (0-4) as listed below.
-3. targets: booleans for all target groups; set true only if that group is explicitly targeted in the text.
+Example: `"insult": 2`
+Do NOT output `"insult": 2.0` or `"insult": "2"`
 
---- JSON FORMAT TO RETURN (MUST MATCH EXACTLY) ---
+=========================
+TARGETS (BOOLEAN FLAGS)
+=========================
+Each target field must be a **boolean** (`true` or `false`) and only set to true if that group is explicitly targeted.
+
+=========================
+JSON SCHEMA (MUST MATCH EXACTLY)
+=========================
 {
   "overall": {
     "score": 0.00
@@ -110,7 +128,9 @@ Use integers from 0 to 4 for all facets based on this scale:
   }
 }
 
---- TEXT TO ANALYZE ---
+=========================
+TEXT TO ANALYZE
+=========================
 {text}
 
 Return ONLY the JSON object. Do not say anything else."""
