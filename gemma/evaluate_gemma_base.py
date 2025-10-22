@@ -29,19 +29,22 @@ def main():
 
     lines = []
 
-    # === OVERALL ===
-    y_true = [x["overall"]["hate_speech_score"] for x in gold_data]
-    y_pred = [
-        x["overall"].get("hate_speech_score", x["overall"].get("score"))
-        for x in model_outputs
-    ]
+    # === OVERALL === (evaluate using labels instead of scores)
+    y_true = [x["overall"]["label"] for x in gold_data]
+    y_pred = [x["overall"].get("label") for x in model_outputs]
 
-    mae = mean_absolute_error(y_true, y_pred)
-    corr = spearmanr(y_true, y_pred).correlation
+    unique_labels = sorted(list(set(y_true + y_pred)))
 
-    lines.append("=== OVERALL ===")
-    lines.append(f"MAE: {mae:.4f}")
-    lines.append(f"Spearman: {corr:.4f}\n")
+    overall_micro_f1 = f1_score(
+        y_true, y_pred, average="micro", labels=unique_labels, zero_division=0
+    )
+    overall_macro_f1 = f1_score(
+        y_true, y_pred, average="macro", labels=unique_labels, zero_division=0
+    )
+
+    lines.append("=== OVERALL (label-based) ===")
+    lines.append(f"Micro F1: {overall_micro_f1:.4f}")
+    lines.append(f"Macro F1: {overall_macro_f1:.4f}\n")
 
     # === FACETS ===
     facet_names = gold_data[0]["facets"].keys()

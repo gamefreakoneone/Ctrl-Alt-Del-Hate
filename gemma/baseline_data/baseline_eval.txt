@@ -1,6 +1,6 @@
-=== OVERALL ===
-MAE: 3.2360
-Spearman: -0.3656
+=== OVERALL (label-based) ===
+Micro F1: 0.1896
+Macro F1: 0.1892
 
 === FACETS ===
 Mean MAE: 1.4410
