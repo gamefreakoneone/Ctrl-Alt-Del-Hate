@@ -11,15 +11,7 @@ TEST_FILE = "../data/test.jsonl"
 OUTPUT_FILE = "./llama_outputs/llama_baseline_outputs.jsonl"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 5
-SAMPLE_LIMIT = 50  # Set to None to process all samples
-TOTAL_SAMPLES = 3958  # Total samples in test set
-
-# Prevent Colab timeout
-try:
-    from google.colab import runtime
-    runtime.unassign()  # Keep Colab from timing out
-except ImportError:
-    pass  # Not running in Colab
+SAMPLE_LIMIT = None  # Set to None to process all samples
 # ==============================
 
 SYSTEM_PROMPT = """You are an expert hate speech analyst. Your task is to analyze the provided text and return ONLY a valid JSON object that strictly adheres to the schema below. Do not include explanations, markdown, or any other text outside of the JSON object.
@@ -65,7 +57,11 @@ Do NOT output `"insult": 2.0` or `"insult": "2"`
 =========================
 TARGETS (BOOLEAN FLAGS)
 =========================
-Each target field must be a **boolean** (`true` or `false`) and only set to true if that group is explicitly targeted.
+Each target field must be a **boolean** (`true` or `false`).
+Set a target to `true` ONLY when:
+1. The text explicitly mentions or refers to that specific group
+2. The text expresses hate, bias, or negative sentiment toward that group
+3. The group is the target of the hate speech, not just mentioned neutrally
 
 =========================
 JSON SCHEMA (MUST MATCH EXACTLY)
@@ -268,8 +264,6 @@ def run_inference(entries):
 # Main
 # --------------------------
 if __name__ == "__main__":
-    import time
-    
     test_data = load_data(TEST_FILE)
     print(f"Loaded {len(test_data)} test samples")
     
@@ -278,21 +272,5 @@ if __name__ == "__main__":
         test_data = test_data[:SAMPLE_LIMIT]
         print(f"Processing first {len(test_data)} samples (SAMPLE_LIMIT={SAMPLE_LIMIT})")
     
-    # Time the inference
-    start_time = time.time()
     run_inference(test_data)
-    elapsed_time = time.time() - start_time
-    
-    # Calculate stats
-    samples_processed = len(test_data)
-    time_per_sample = elapsed_time / samples_processed
-    
-    print(f"\nInference complete. Results written to {OUTPUT_FILE}")
-    print(f"Total time: {elapsed_time/60:.2f} minutes ({elapsed_time:.2f} seconds)")
-    print(f"Average time per sample: {time_per_sample:.2f} seconds")
-    
-    # Project full dataset time
-    if samples_processed < TOTAL_SAMPLES:
-        projected_time = time_per_sample * TOTAL_SAMPLES
-        print(f"\nProjected time for full {TOTAL_SAMPLES} samples:")
-        print(f"    {projected_time/3600:.2f} hours ({projected_time/60:.2f} minutes)")
+    print(f"Inference complete. Results written to {OUTPUT_FILE}")

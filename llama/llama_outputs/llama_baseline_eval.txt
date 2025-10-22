@@ -1,0 +1,13 @@
+=== OVERALL ===
+MAE: 2.0678
+Spearman: 0.0816
+
+=== FACETS ===
+Mean MAE: 1.7080
+Mean Spearman: 0.0692
+
+=== TARGETS ===
+Micro F1: 0.0000
+Macro F1: 0.0000
+
+✅ Evaluation complete.
