@@ -4,7 +4,7 @@ from sklearn.metrics import f1_score, mean_absolute_error
 from scipy.stats import spearmanr
 
 TEST_FILE = "../data/test.jsonl"
-OUTPUT_FILE = "./baseline_data/gemma_baseline_outputs.jsonl"
+OUTPUT_FILE = "./baseline_data/gemma_baseline_outputs_validated.jsonl"
 OUTPUT_EVAL = "./baseline_data/baseline_eval.txt"
 
 
@@ -31,7 +31,11 @@ def main():
 
     # === OVERALL ===
     y_true = [x["overall"]["hate_speech_score"] for x in gold_data]
-    y_pred = [x["overall"]["hate_speech_score"] for x in model_outputs]
+    y_pred = [
+        x["overall"].get("hate_speech_score", x["overall"].get("score"))
+        for x in model_outputs
+    ]
+
     mae = mean_absolute_error(y_true, y_pred)
     corr = spearmanr(y_true, y_pred).correlation
 

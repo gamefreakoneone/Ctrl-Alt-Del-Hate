@@ -12,7 +12,7 @@ model = genai.GenerativeModel("gemma-3-1b-it")
 TEST_FILE = "../data/test.jsonl"
 OUTPUT_FILE = "./baseline_data/gemma_baseline_outputs.jsonl"
 BATCH_SIZE = 1
-SLEEP_TIME = 2
+SLEEP_TIME = 0
 # =============================
 
 SYSTEM_PROMPT = """You are an expert hate speech analyst. Your task is to analyze the provided text and return ONLY a valid JSON object that strictly follows the schema below. 
@@ -169,6 +169,8 @@ async def analyze(entry):
     try:
         response = await asyncio.to_thread(model.generate_content, prompt)
         output = response.text.strip()
+
+        print(output)
 
         parsed = extract_json(output)
         if parsed is None:
