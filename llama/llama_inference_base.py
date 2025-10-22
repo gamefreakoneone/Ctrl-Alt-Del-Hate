@@ -11,6 +11,8 @@ TEST_FILE = "../data/test.jsonl"
 OUTPUT_FILE = "./llama_outputs/llama_baseline_outputs.jsonl"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 5
+SAMPLE_LIMIT = 50  # Set to None to process all samples
+TOTAL_SAMPLES = 3958  # Total samples in test set
 
 # Prevent Colab timeout
 try:
@@ -148,7 +150,7 @@ print("Loading Llama model and tokenizer...")
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, torch_dtype=torch.bfloat16, device_map="auto")
 model.eval()
-print(f"Model loaded on device: {model.device}")
+print(f"Device: {model.device}")
 
 
 # --------------------------
@@ -224,10 +226,6 @@ def analyze(entry):
         clean_up_tokenization_spaces=True,
     ).strip()
 
-    # Print scores for monitoring
-    gold_score = entry.get("overall", {}).get("hate_speech_score", "N/A")
-    print(f"\nGold: {gold_score:>6}")
-
     # Handle possible markdown/code formatting
     if text_output.startswith("```"):
         text_output = text_output.strip("`")
@@ -237,11 +235,15 @@ def analyze(entry):
 
     prediction = extract_json(text_output)
 
+    # Get scores for display
+    gold_score = entry.get("overall", {}).get("hate_speech_score", "N/A")
     if prediction is None:
-        print(f"Failed to parse JSON for {entry['comment_id']}")
+        print(f"\nSample {entry['comment_id']}: Failed to parse JSON")
+        print(f"Gold score: {gold_score:>6} | Generated: N/A")
     else:
         generated_score = prediction.get("overall", {}).get("score", "N/A")
-        print(f"Generated: {generated_score:>6}")
+        print(f"\nSample {entry['comment_id']}:")
+        print(f"Gold score: {gold_score:>6} | Generated: {generated_score:>6}")
 
     return {"id": entry["comment_id"], "prediction": prediction}
 
@@ -266,7 +268,31 @@ def run_inference(entries):
 # Main
 # --------------------------
 if __name__ == "__main__":
+    import time
+    
     test_data = load_data(TEST_FILE)
     print(f"Loaded {len(test_data)} test samples")
+    
+    # Apply sample limit if set
+    if SAMPLE_LIMIT is not None:
+        test_data = test_data[:SAMPLE_LIMIT]
+        print(f"Processing first {len(test_data)} samples (SAMPLE_LIMIT={SAMPLE_LIMIT})")
+    
+    # Time the inference
+    start_time = time.time()
     run_inference(test_data)
-    print(f"Inference complete. Results written to {OUTPUT_FILE}")
+    elapsed_time = time.time() - start_time
+    
+    # Calculate stats
+    samples_processed = len(test_data)
+    time_per_sample = elapsed_time / samples_processed
+    
+    print(f"\nInference complete. Results written to {OUTPUT_FILE}")
+    print(f"Total time: {elapsed_time/60:.2f} minutes ({elapsed_time:.2f} seconds)")
+    print(f"Average time per sample: {time_per_sample:.2f} seconds")
+    
+    # Project full dataset time
+    if samples_processed < TOTAL_SAMPLES:
+        projected_time = time_per_sample * TOTAL_SAMPLES
+        print(f"\nProjected time for full {TOTAL_SAMPLES} samples:")
+        print(f"    {projected_time/3600:.2f} hours ({projected_time/60:.2f} minutes)")
