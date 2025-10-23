@@ -1,0 +1,83 @@
+{
+  "comment_id": 18662,
+  "text": "Incels are the only kind of losers in society that choose to wallow in their uselessness as humans. Truly a waste of oxygen keeping yourself alive if you identify as an incel.",
+  "expected": {
+    "comment_id": 18662,
+    "text": "Incels are the only kind of losers in society that choose to wallow in their uselessness as humans. Truly a waste of oxygen keeping yourself alive if you identify as an incel.",
+    "messages": [
+      {
+        "content": "\n```\nYou are an expert hate speech analyst. Your task is to analyze the provided text and return ONLY a valid JSON object that strictly follows the schema below.\nDo not include any explanations, markdown formatting, or text outside of the JSON object.\n\n=========================\nIMPORTANT INSTRUCTIONS\n=========================\n1. Output must be **valid JSON only** - no markdown, no commentary.\n2. Use exact field names and types from the schema.\n3. Type requirements:\n   - `overall.label` → string (\"hateful\", \"supportive\", or \"neutral\")\n   - `overall.score` → float (e.g., `1.52`, `-1.35`, `0.12`)\n   - All `facets` values → integers 0-4 only (e.g., `3`, not `3.0`)\n   - All `targets` values → booleans (`true` or `false`)\n\n=========================\nOVERALL ASSESSMENT\n=========================\nProvide two values in the `\"overall\"` object:\n\n1. **`\"score\"`** - A float representing hate speech intensity:\n   - **Hateful content** → positive float > 0.5 (e.g., `0.8`, `1.52`, `2.3`)\n   - **Neutral content** → float between -1.0 and 0.5 inclusive (e.g., `-0.8`, `0.12`, `0.4`)\n   - **Supportive content** → negative float < -1.0 (e.g., `-1.35`, `-2.1`)\n\n2. **`\"label\"`** - A categorical string derived from the score:\n   - `\"hateful\"` if score > 0.5\n   - `\"neutral\"` if score is between -1.0 and 0.5 (inclusive)\n   - `\"supportive\"` if score < -1.0\n\n=========================\nFACETS (0-4 SCALE)\n=========================\nEach facet is an **integer** from 0 to 4:\n- 0 = Absent\n- 1 = Mild\n- 2 = Clear\n- 3 = Severe\n- 4 = Extreme\n\nExample: `\"insult\": 2` (not `2.0` or `\"2\"`)\n\n=========================\nTARGETS (BOOLEAN FLAGS)\n=========================\nSet to `true` only if that group is explicitly targeted in the text.\n\n=========================\nJSON SCHEMA (MUST MATCH EXACTLY)\n=========================\n{\n  \"overall\": {\n    \"label\": \"neutral\",\n    \"score\": 0.00\n  },\n  \"facets\": {\n    \"sentiment\": 0,\n    \"respect\": 0,\n    \"insult\": 0,\n    \"humiliate\": 0,\n    \"status\": 0,\n    \"dehumanize\": 0,\n    \"violence\": 0,\n    \"genocide\": 0,\n    \"attack_defend\": 0,\n    \"hatespeech\": 0\n  },\n  \"targets\": {\n    \"target_race_asian\": false,\n    \"target_race_black\": false,\n    \"target_race_latinx\": false,\n    \"target_race_middle_eastern\": false,\n    \"target_race_native_american\": false,\n    \"target_race_pacific_islander\": false,\n    \"target_race_white\": false,\n    \"target_race_other\": false,\n    \"target_religion_atheist\": false,\n    \"target_religion_buddhist\": false,\n    \"target_religion_christian\": false,\n    \"target_religion_hindu\": false,\n    \"target_religion_jewish\": false,\n    \"target_religion_mormon\": false,\n    \"target_religion_muslim\": false,\n    \"target_religion_other\": false,\n    \"target_origin_immigrant\": false,\n    \"target_origin_migrant_worker\": false,\n    \"target_origin_specific_country\": false,\n    \"target_origin_undocumented\": false,\n    \"target_origin_other\": false,\n    \"target_gender_men\": false,\n    \"target_gender_non_binary\": false,\n    \"target_gender_transgender_men\": false,\n    \"target_gender_transgender_unspecified\": false,\n    \"target_gender_transgender_women\": false,\n    \"target_gender_women\": false,\n    \"target_gender_other\": false,\n    \"target_sexuality_bisexual\": false,\n    \"target_sexuality_gay\": false,\n    \"target_sexuality_lesbian\": false,\n    \"target_sexuality_straight\": false,\n    \"target_sexuality_other\": false,\n    \"target_age_children\": false,\n    \"target_age_teenagers\": false,\n    \"target_age_young_adults\": false,\n    \"target_age_middle_aged\": false,\n    \"target_age_seniors\": false,\n    \"target_age_other\": false,\n    \"target_disability_physical\": false,\n    \"target_disability_cognitive\": false,\n    \"target_disability_neurological\": false,\n    \"target_disability_visually_impaired\": false,\n    \"target_disability_hearing_impaired\": false,\n    \"target_disability_unspecific\": false,\n    \"target_disability_other\": false\n  }\n}\n\n=========================\nTEXT TO ANALYZE\n=========================\n{text}\n\n\n<text>\nIncels are the only kind of losers in society that choose to wallow in their uselessness as humans. Truly a waste of oxygen keeping yourself alive if you identify as an incel.\n</text>",
+        "role": "user"
+      },
+      {
+        "content": "{\"overall\": {\"label\": \"neutral\", \"hate_speech_score\": -0.45}, \"facets\": {\"sentiment\": 4.0, \"respect\": 3.0, \"insult\": 3.0, \"humiliate\": 2.0, \"status\": 2.0, \"dehumanize\": 2.0, \"violence\": 1.0, \"genocide\": 1.0, \"attack_defend\": 3.0, \"hatespeech\": 0.0}, \"targets\": {\"target_race_asian\": false, \"target_race_black\": false, \"target_race_latinx\": false, \"target_race_middle_eastern\": false, \"target_race_native_american\": false, \"target_race_pacific_islander\": false, \"target_race_white\": true, \"target_race_other\": false, \"target_religion_atheist\": false, \"target_religion_buddhist\": false, \"target_religion_christian\": false, \"target_religion_hindu\": false, \"target_religion_jewish\": false, \"target_religion_mormon\": false, \"target_religion_muslim\": false, \"target_religion_other\": false, \"target_origin_immigrant\": false, \"target_origin_migrant_worker\": false, \"target_origin_specific_country\": false, \"target_origin_undocumented\": false, \"target_origin_other\": false, \"target_gender_men\": true, \"target_gender_non_binary\": false, \"target_gender_transgender_men\": false, \"target_gender_transgender_unspecified\": false, \"target_gender_transgender_women\": false, \"target_gender_women\": false, \"target_gender_other\": false, \"target_sexuality_bisexual\": false, \"target_sexuality_gay\": false, \"target_sexuality_lesbian\": false, \"target_sexuality_straight\": true, \"target_sexuality_other\": false, \"target_disability_physical\": false, \"target_disability_cognitive\": false, \"target_disability_neurological\": false, \"target_disability_visually_impaired\": false, \"target_disability_hearing_impaired\": false, \"target_disability_unspecific\": false, \"target_disability_other\": false}}",
+        "role": "model"
+      }
+    ],
+    "overall": {},
+    "facets": {},
+    "targets": {}
+  },
+  "predicted": {
+    "overall": {
+      "label": "hateful",
+      "hate_speech_score": 1.03
+    },
+    "facets": {
+      "sentiment": 4,
+      "respect": 4,
+      "insult": 4,
+      "humiliate": 3,
+      "status": 3,
+      "dehumanize": 2,
+      "violence": 0,
+      "genocide": 0,
+      "attack_defend": 3,
+      "hatespeech": 1
+    },
+    "targets": {
+      "target_race_asian": false,
+      "target_race_black": false,
+      "target_race_latinx": false,
+      "target_race_middle_eastern": false,
+      "target_race_native_american": false,
+      "target_race_pacific_islander": false,
+      "target_race_white": false,
+      "target_race_other": false,
+      "target_religion_atheist": false,
+      "target_religion_buddhist": false,
+      "target_religion_christian": false,
+      "target_religion_hindu": false,
+      "target_religion_jewish": false,
+      "target_religion_mormon": false,
+      "target_religion_muslim": false,
+      "target_religion_other": false,
+      "target_origin_immigrant": false,
+      "target_origin_migrant_worker": false,
+      "target_origin_specific_country": false,
+      "target_origin_undocumented": false,
+      "target_origin_other": false,
+      "target_gender_men": false,
+      "target_gender_non_binary": false,
+      "target_gender_transgender_men": false,
+      "target_gender_transgender_unspecified": false,
+      "target_gender_transgender_women": false,
+      "target_gender_women": false,
+      "target_gender_other": false,
+      "target_sexuality_bisexual": false,
+      "target_sexuality_gay": false,
+      "target_sexuality_lesbian": false,
+      "target_sexuality_straight": false,
+      "target_sexuality_other": true,
+      "target_disability_physical": false,
+      "target_disability_cognitive": false,
+      "target_disability_neurological": false,
+      "target_disability_visually_impaired": false,
+      "target_disability_hearing_impaired": false,
+      "target_disability_unspecific": false,
+      "target_disability_other": false
+    }
+  },
+  "raw_output": "{\"overall\": {\"label\": \"hateful\", \"hate_speech_score\": 1.03}, \"facets\": {\"sentiment\": 4.0, \"respect\": 4.0, \"insult\": 4.0, \"humiliate\": 3.0, \"status\": 3.0, \"dehumanize\": 2.0, \"violence\": 0.0, \"genocide\": 0.0, \"attack_defend\": 3.0, \"hatespeech\": 1.0}, \"targets\": {\"target_race_asian\": false, \"target_race_black\": false, \"target_race_latinx\": false, \"target_race_middle_eastern\": false, \"target_race_native_american\": false, \"target_race_pacific_islander\": false, \"target_race_white\": false, \"target_race_other\": false, \"target_religion_atheist\": false, \"target_religion_buddhist\": false, \"target_religion_christian\": false, \"target_religion_hindu\": false, \"target_religion_jewish\": false, \"target_religion_mormon\": false, \"target_religion_muslim\": false, \"target_religion_other\": false, \"target_origin_immigrant\": false, \"target_origin_migrant_worker\": false, \"target_origin_specific_country\": false, \"target_origin_undocumented\": false, \"target_origin_other\": false, \"target_gender_men\": false, \"target_gender_non_binary\": false, \"target_gender_transgender_men\": false, \"target_gender_transgender_unspecified\": false, \"target_gender_transgender_women\": false, \"target_gender_women\": false, \"target_gender_other\": false, \"target_sexuality_bisexual\": false, \"target_sexuality_gay\": false, \"target_sexuality_lesbian\": false, \"target_sexuality_straight\": false, \"target_sexuality_other\": true, \"target_disability_physical\": false, \"target_disability_cognitive\": false, \"target_disability_neurological\": false, \"target_disability_visually_impaired\": false, \"target_disability_hearing_impaired\": false, \"target_disability_unspecific\": false, \"target_disability_other\": false}}",
+  "success": true
+}
