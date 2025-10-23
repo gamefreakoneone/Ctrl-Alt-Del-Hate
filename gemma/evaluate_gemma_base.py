@@ -57,7 +57,7 @@ def main():
 
     lines.append("=== FACETS ===")
     lines.append(f"Mean MAE: {np.mean(list(facet_mae.values())):.4f}")
-    lines.append(f"Mean Spearman: {np.mean(list(facet_corr.values())):.4f}\n")
+    lines.append(f"Mean Spearman: {np.nanmean(list(facet_corr.values())):.4f}\n")
 
     # === TARGETS ===
     target_names = gold_data[0]["targets"].keys()
