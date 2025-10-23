@@ -6,3 +6,6 @@ train.jsonl
 val.jsonl
 C:\Users\amogh\Desktop\Ctrl-Alt-Del-Hate\data\training data
 gemma_baseline_outputs_validated.jsonl
+train_aggregated.jsonl
+llama_baseline_outputs_validated.jsonl
+llama_baseline_outputs.jsonl

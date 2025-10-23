@@ -12,7 +12,7 @@ model = genai.GenerativeModel("gemma-3-1b-it")
 TEST_FILE = "../data/test.jsonl"
 OUTPUT_FILE = "./baseline_data/gemma_baseline_outputs.jsonl"
 BATCH_SIZE = 1
-SLEEP_TIME = 0
+SLEEP_TIME = 3
 # =============================
 
 SYSTEM_PROMPT = """You are an expert hate speech analyst. Your task is to analyze the provided text and return ONLY a valid JSON object that strictly follows the schema below. 
@@ -27,15 +27,22 @@ IMPORTANT INSTRUCTIONS
    - Floats → only for `score`
    - Integers → only for all values in `facets` (must be whole numbers, not floats)
    - Booleans → only for all values in `targets` (`true` or `false`, lowercase)
+   - Strings → only for `label` (must be one of: "supportive", "neutral", "hateful")
 
 =========================
-OVERALL SCORE
+OVERALL SCORE AND LABEL
 =========================
-Produce a single signed float named `"score"` inside `"overall"`. Example:
-- NEGATIVE float for supportive content → e.g. `-1.35`
-- POSITIVE float for hateful content → e.g. `1.47`
-- NEAR ZERO float for neutral content → e.g. `0.12`, `-0.08`
-Must be a **standard JSON number**, not a string (e.g. `0.32`, not `"0.32"`).
+Produce a single signed float named `"score"` and a string `"label"` inside `"overall"`.  
+
+**Scoring Rules:**
+- NEGATIVE float: `< -1` → Supportive content (e.g. `-1.35`)
+- POSITIVE float: `> 0.5` → Hateful content (e.g. `1.47`)
+- NEAR ZERO float: `-1 <= score <= 0.5` → Neutral content (e.g. `0.12`, `-0.08`)
+
+**Label Rules:**
+- If `score < -1`, then `"label": "supportive"`
+- If `-1 <= score <= 0.5`, then `"label": "neutral"`
+- If `score > 0.5`, then `"label": "hateful"`
 
 =========================
 FACETS (0-4 SCALE)
@@ -61,7 +68,8 @@ JSON SCHEMA (MUST MATCH EXACTLY)
 =========================
 {
   "overall": {
-    "score": 0.00
+    "score": 0.00,
+    "label": "neutral"
   },
   "facets": {
     "sentiment": 0,
@@ -169,8 +177,6 @@ async def analyze(entry):
     try:
         response = await asyncio.to_thread(model.generate_content, prompt)
         output = response.text.strip()
-
-        print(output)
 
         parsed = extract_json(output)
         if parsed is None:

@@ -17,8 +17,8 @@ def clamp_int(value, min_val=0, max_val=4):
 
 def validate_schema(entry):
     """Validate one prediction entry."""
-    if "prediction" not in entry or entry["prediction"] is None:
-        return entry
+    if entry.get("prediction") is None:
+        entry["prediction"] = {}
 
     pred = entry["prediction"]
 
@@ -31,7 +31,13 @@ def validate_schema(entry):
         score = 0.0
     overall["score"] = score
 
-    # Keep label if exists (no need to modify)
+    # Validate label
+    allowed_labels = {"supportive", "neutral", "hateful"}
+    label = overall.get("label", "neutral")
+    if not isinstance(label, str) or label.lower() not in allowed_labels:
+        label = "neutral"
+    overall["label"] = label.lower()
+
     pred["overall"] = overall
 
     # ========== FACETS ==========
