@@ -24,25 +24,25 @@ IMPORTANT INSTRUCTIONS
 1. The output must be **valid JSON**, with no markdown or extra commentary.
 2. Use the exact field names and types described below.
 3. Each value must follow its correct type:
-   - Floats → only for `score`
+   - Floats → only for `hate_speech_score`
    - Integers → only for all values in `facets` (must be whole numbers, not floats)
    - Booleans → only for all values in `targets` (`true` or `false`, lowercase)
    - Strings → only for `label` (must be one of: "supportive", "neutral", "hateful")
 
 =========================
-OVERALL SCORE AND LABEL
+OVERALL HATE_SPEECH_SCORE AND LABEL
 =========================
-Produce a single signed float named `"score"` and a string `"label"` inside `"overall"`.  
+Produce a single signed float named `"hate_speech_score"` and a string `"label"` inside `"overall"`.  
 
 **Scoring Rules:**
 - NEGATIVE float: `< -1` → Supportive content (e.g. `-1.35`)
 - POSITIVE float: `> 0.5` → Hateful content (e.g. `1.47`)
-- NEAR ZERO float: `-1 <= score <= 0.5` → Neutral content (e.g. `0.12`, `-0.08`)
+- NEAR ZERO float: `-1 <= hate_speech_score <= 0.5` → Neutral content (e.g. `0.12`, `-0.08`)
 
 **Label Rules:**
-- If `score < -1`, then `"label": "supportive"`
-- If `-1 <= score <= 0.5`, then `"label": "neutral"`
-- If `score > 0.5`, then `"label": "hateful"`
+- If `hate_speech_score < -1`, then `"label": "supportive"`
+- If `-1 <= hate_speech_score <= 0.5`, then `"label": "neutral"`
+- If `hate_speech_score > 0.5`, then `"label": "hateful"`
 
 =========================
 FACETS (0-4 SCALE)
@@ -68,7 +68,7 @@ JSON SCHEMA (MUST MATCH EXACTLY)
 =========================
 {
   "overall": {
-    "score": 0.00,
+    "hate_speech_score": 0.00,
     "label": "neutral"
   },
   "facets": {

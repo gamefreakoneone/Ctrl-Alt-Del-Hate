@@ -24,12 +24,12 @@ def validate_schema(entry):
 
     # ========== OVERALL ==========
     overall = pred.get("overall", {})
-    score = overall.get("score", 0.0)
+    score = overall.get("hate_speech_score", 0.0)
     try:
         score = float(score)
     except Exception:
         score = 0.0
-    overall["score"] = score
+    overall["hate_speech_score"] = score
 
     # Validate label
     allowed_labels = {"supportive", "neutral", "hateful"}
