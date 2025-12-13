@@ -243,7 +243,6 @@ def analyze(entry):
 
     return {"id": entry["comment_id"], "prediction": prediction}
 
-
 # --------------------------
 # Run Inference
 # --------------------------
@@ -258,7 +257,6 @@ def run_inference(entries):
                 f.write(json.dumps(result) + "\n")
                 f.flush()  # Ensure writes in case of interruption
     return results
-
 
 # --------------------------
 # Main
