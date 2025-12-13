@@ -1,0 +1,169 @@
+5 Epochs, rank = 32 , alpha=16
+
+
+Epoch	Training Loss	Validation Loss
+1	0.089600	0.086543
+2	0.078100	0.085821
+3	0.075600	0.087731
+4	0.060400	0.091924
+5	0.056100	0.096100
+
+
+
+ Starting Llama LoRA Testing Pipeline
+============================================================
+STEP 1: Merging LoRA adapter with base Llama model
+============================================================
+
+ Loading base model...
+
+ Loading LoRA adapter...
+
+ Merging adapter with base model...
+
+ Saving merged model...
+
+ Merged model saved to: llama-1B-merged-r32
+   Now you can use this with vLLM!
+   
+   
+============================================================
+VLLM INFERENCE (MERGED LLAMA MODEL)
+============================================================
+
+ Loading merged model with vLLM...
+INFO 11-18 02:09:54 [utils.py:233] non-default args: {'trust_remote_code': True, 'dtype': 'bfloat16', 'max_model_len': 4096, 'disable_log_stats': True, 'model': 'llama-1B-merged-r32'}
+The argument `trust_remote_code` is to be used with Auto classes. It has no effect here and is ignored.
+INFO 11-18 02:09:54 [model.py:547] Resolved architecture: LlamaForCausalLM
+INFO 11-18 02:09:54 [model.py:1510] Using max model len 4096
+INFO 11-18 02:09:54 [scheduler.py:205] Chunked prefill is enabled with max_num_batched_tokens=8192.
+INFO 11-18 02:10:27 [llm.py:306] Supported_tasks: ['generate']
+
+ Loading test data...
+Test dataset size: 3957
+
+ Preparing prompts...
+
+ Running inference on 3957 samples...
+Adding requests: 100%
+ 3957/3957 [00:14<00:00, 91.82it/s]
+Processed prompts: 100%
+ 3957/3957 [02:27<00:00, 32.56it/s, est. speed input: 31711.14 toks/s, output: 14358.93 toks/s]
+
+ Processing results...
+Processing outputs: 100%|██████████| 3957/3957 [00:01<00:00, 3069.11it/s]
+
+ Saving results...
+
+ Inference complete!
+   Total: 3957
+   Success: 3957 (100.0%)
+   Failed: 0
+
+============================================================
+ PIPELINE COMPLETE!
+============================================================
+
+ Output files created:
+   - llama_test_predictions_vllm.jsonl
+   - llama_failed_predictions_vllm.jsonl (if any failures)
+
+ Next step: Run evaluation script on llama_test_predictions_vllm.jsonl
+ 
+ 
+ ============================================================
+LLAMA HATE SPEECH MODEL EVALUATION
+============================================================
+
+ Using predictions from: llama_test_predictions_vllm.jsonl
+
+ Data Summary:
+   Total samples: 3957
+    Valid predictions: 3957 (100.0%)
+    Failed predictions: 0 (0.0%)
+
+============================================================
+EVALUATION RESULTS
+============================================================
+
+============================================================
+1. OVERALL: Label Classification
+============================================================
+Accuracy:        0.6808
+Macro F1:        0.6622
+Micro F1:        0.6808
+Macro Precision: 0.6665
+Macro Recall:    0.6592
+
+Per-class breakdown:
+              precision    recall  f1-score   support
+
+     hateful       0.72      0.66      0.69      1053
+     neutral       0.49      0.53      0.51      1137
+  supportive       0.79      0.79      0.79      1767
+
+    accuracy                           0.68      3957
+   macro avg       0.67      0.66      0.66      3957
+weighted avg       0.69      0.68      0.68      3957
+
+Score Spearman correlation: 0.8048
+
+============================================================
+2. FACETS: Ordinal Ratings (0-4 scale)
+============================================================
+Mean MAE:               0.5220
+Mean MSE:               0.7148
+Mean Spearman:          0.6037
+Mean Exact Match:       0.5648
+Mean Within-1 Accuracy: 0.9216
+
+Per-facet breakdown:
+Facet                MAE      Exact    Within-1   Spearman  
+------------------------------------------------------------
+sentiment            0.457    0.594    0.953      0.726     
+respect              0.519    0.549    0.938      0.718     
+insult               0.629    0.478    0.905      0.690     
+humiliate            0.682    0.434    0.893      0.655     
+status               0.448    0.593    0.960      0.521     
+dehumanize           0.799    0.389    0.830      0.532     
+violence             0.541    0.578    0.898      0.504     
+genocide             0.312    0.758    0.942      0.438     
+attack_defend        0.495    0.563    0.946      0.622     
+hatespeech           0.339    0.711    0.950      0.632     
+
+============================================================
+3. TARGETS: Multi-label Classification
+============================================================
+Micro F1:          0.6027
+Macro F1:          0.4153
+Micro Precision:   0.7249
+Micro Recall:      0.5158
+Hamming Loss:      0.0384
+Exact Match Ratio: 0.3533 (1398/3957)
+
+Per-target F1 scores (bottom 10):
+  target_gender_other                      0.000
+  target_age_other                         0.000
+  target_disability_other                  0.035
+  target_origin_other                      0.058
+  target_disability_unspecific             0.102
+  target_disability_visually_impaired      0.118
+  target_disability_hearing_impaired       0.118
+  target_disability_physical               0.207
+  target_age_middle_aged                   0.211
+  target_sexuality_straight                0.217
+
+============================================================
+SAVING EVALUATION SUMMARY
+============================================================
+ Summary saved to: llama_evaluation_summary.json
+
+============================================================
+EVALUATION COMPLETE!
+============================================================
+
+ KEY METRICS SUMMARY:
+   Overall Accuracy: 68.08%
+   Overall Macro F1: 0.6622
+   Facets Mean MAE:  0.5220
+   Targets Micro F1: 0.6027

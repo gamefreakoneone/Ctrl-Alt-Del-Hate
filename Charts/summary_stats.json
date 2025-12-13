@@ -1,0 +1,263 @@
+{
+  "overall": {
+    "supportive": 17475,
+    "neutral": 11736,
+    "hateful": 10354
+  },
+  "facets": {
+    "sentiment": {
+      "3": 11082,
+      "4": 15758,
+      "1": 2563,
+      "2": 8146,
+      "0": 2016
+    },
+    "respect": {
+      "2": 9677,
+      "3": 10257,
+      "4": 14263,
+      "1": 2851,
+      "0": 2517
+    },
+    "insult": {
+      "2": 9557,
+      "3": 11804,
+      "4": 9708,
+      "1": 4315,
+      "0": 4181
+    },
+    "humiliate": {
+      "2": 12448,
+      "3": 10749,
+      "4": 5792,
+      "1": 5587,
+      "0": 4989
+    },
+    "status": {
+      "3": 11848,
+      "1": 893,
+      "2": 21288,
+      "4": 5403,
+      "0": 133
+    },
+    "dehumanize": {
+      "1": 9134,
+      "3": 6560,
+      "4": 2704,
+      "2": 13649,
+      "0": 7518
+    },
+    "violence": {
+      "1": 9823,
+      "0": 21726,
+      "2": 4700,
+      "3": 1775,
+      "4": 1541
+    },
+    "genocide": {
+      "1": 6258,
+      "0": 29804,
+      "2": 2157,
+      "3": 644,
+      "4": 702
+    },
+    "attack_defend": {
+      "2": 15566,
+      "3": 13335,
+      "1": 3253,
+      "4": 6111,
+      "0": 1300
+    },
+    "hatespeech": {
+      "0": 24181,
+      "1": 7825,
+      "2": 7559
+    }
+  },
+  "targets": {
+    "target_race_asian": {
+      "true": 2342,
+      "false": 37223
+    },
+    "target_race_black": {
+      "true": 6291,
+      "false": 33274
+    },
+    "target_race_latinx": {
+      "true": 2837,
+      "false": 36728
+    },
+    "target_race_middle_eastern": {
+      "true": 4156,
+      "false": 35409
+    },
+    "target_race_native_american": {
+      "true": 1259,
+      "false": 38306
+    },
+    "target_race_pacific_islander": {
+      "true": 1098,
+      "false": 38467
+    },
+    "target_race_white": {
+      "true": 4372,
+      "false": 35193
+    },
+    "target_race_other": {
+      "true": 2825,
+      "false": 36740
+    },
+    "target_religion_atheist": {
+      "true": 678,
+      "false": 38887
+    },
+    "target_religion_buddhist": {
+      "true": 581,
+      "false": 38984
+    },
+    "target_religion_christian": {
+      "true": 2744,
+      "false": 36821
+    },
+    "target_religion_hindu": {
+      "true": 900,
+      "false": 38665
+    },
+    "target_religion_jewish": {
+      "true": 1874,
+      "false": 37691
+    },
+    "target_religion_mormon": {
+      "true": 687,
+      "false": 38878
+    },
+    "target_religion_muslim": {
+      "true": 3433,
+      "false": 36132
+    },
+    "target_religion_other": {
+      "true": 1564,
+      "false": 38001
+    },
+    "target_origin_immigrant": {
+      "true": 3298,
+      "false": 36267
+    },
+    "target_origin_migrant_worker": {
+      "true": 1163,
+      "false": 38402
+    },
+    "target_origin_specific_country": {
+      "true": 6569,
+      "false": 32996
+    },
+    "target_origin_undocumented": {
+      "true": 2129,
+      "false": 37436
+    },
+    "target_origin_other": {
+      "true": 1605,
+      "false": 37960
+    },
+    "target_gender_men": {
+      "true": 6205,
+      "false": 33360
+    },
+    "target_gender_non_binary": {
+      "true": 1179,
+      "false": 38386
+    },
+    "target_gender_transgender_men": {
+      "true": 1816,
+      "false": 37749
+    },
+    "target_gender_transgender_unspecified": {
+      "true": 1615,
+      "false": 37950
+    },
+    "target_gender_transgender_women": {
+      "true": 1476,
+      "false": 38089
+    },
+    "target_gender_women": {
+      "true": 11983,
+      "false": 27582
+    },
+    "target_gender_other": {
+      "true": 570,
+      "false": 38995
+    },
+    "target_sexuality_bisexual": {
+      "true": 3553,
+      "false": 36012
+    },
+    "target_sexuality_gay": {
+      "true": 5996,
+      "false": 33569
+    },
+    "target_sexuality_lesbian": {
+      "true": 3502,
+      "false": 36063
+    },
+    "target_sexuality_straight": {
+      "true": 3284,
+      "false": 36281
+    },
+    "target_sexuality_other": {
+      "true": 1598,
+      "false": 37967
+    },
+    "target_age_children": {
+      "true": 505,
+      "false": 39060
+    },
+    "target_age_teenagers": {
+      "true": 661,
+      "false": 38904
+    },
+    "target_age_young_adults": {
+      "true": 811,
+      "false": 38754
+    },
+    "target_age_middle_aged": {
+      "true": 492,
+      "false": 39073
+    },
+    "target_age_seniors": {
+      "true": 396,
+      "false": 39169
+    },
+    "target_age_other": {
+      "true": 96,
+      "false": 39469
+    },
+    "target_disability_physical": {
+      "true": 214,
+      "false": 39351
+    },
+    "target_disability_cognitive": {
+      "true": 793,
+      "false": 38772
+    },
+    "target_disability_neurological": {
+      "true": 390,
+      "false": 39175
+    },
+    "target_disability_visually_impaired": {
+      "true": 91,
+      "false": 39474
+    },
+    "target_disability_hearing_impaired": {
+      "true": 94,
+      "false": 39471
+    },
+    "target_disability_unspecific": {
+      "true": 435,
+      "false": 39130
+    },
+    "target_disability_other": {
+      "true": 176,
+      "false": 39389
+    }
+  }
+}
