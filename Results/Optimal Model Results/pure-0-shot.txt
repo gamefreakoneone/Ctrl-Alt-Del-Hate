@@ -1,0 +1,113 @@
+0-shot
+Epoch	Training Loss	Validation Loss
+1	0.089200	0.086131
+2	0.077100	0.085445
+
+
+ Processing results...
+Processing outputs: 100%|██████████| 3957/3957 [00:01<00:00, 3212.35it/s]
+
+ Saving results...
+
+ Inference complete!
+   Total: 3957
+   Success: 3957 (100.0%)
+   Failed: 0
+
+
+============================================================
+LLAMA HATE SPEECH MODEL EVALUATION
+============================================================
+
+ Using predictions from: llama_test_predictions_vllm.jsonl
+
+ Data Summary:
+   Total samples: 3957
+    Valid predictions: 3957 (100.0%)
+    Failed predictions: 0 (0.0%)
+
+============================================================
+EVALUATION RESULTS
+============================================================
+
+============================================================
+1. OVERALL: Label Classification
+============================================================
+Accuracy:        0.6768
+Macro F1:        0.6532
+Micro F1:        0.6768
+Macro Precision: 0.6522
+Macro Recall:    0.6548
+
+Per-class breakdown:
+              precision    recall  f1-score   support
+
+     hateful       0.68      0.71      0.70      1053
+     neutral       0.49      0.46      0.48      1137
+  supportive       0.78      0.80      0.79      1767
+
+    accuracy                           0.68      3957
+   macro avg       0.65      0.65      0.65      3957
+weighted avg       0.67      0.68      0.67      3957
+
+Score Spearman correlation: 0.7966
+
+============================================================
+2. FACETS: Ordinal Ratings (0-4 scale)
+============================================================
+Mean MAE:               0.5298
+Mean MSE:               0.7132
+Mean Spearman:          0.5937
+Mean Exact Match:       0.5543
+Mean Within-1 Accuracy: 0.9227
+
+Per-facet breakdown:
+Facet                MAE      Exact    Within-1   Spearman  
+------------------------------------------------------------
+sentiment            0.470    0.584    0.950      0.717     
+respect              0.548    0.519    0.940      0.700     
+insult               0.656    0.457    0.900      0.674     
+humiliate            0.679    0.433    0.896      0.638     
+status               0.447    0.591    0.963      0.495     
+dehumanize           0.798    0.375    0.838      0.533     
+violence             0.532    0.582    0.898      0.522     
+genocide             0.309    0.758    0.942      0.438     
+attack_defend        0.511    0.545    0.948      0.593     
+hatespeech           0.348    0.700    0.952      0.626     
+
+============================================================
+3. TARGETS: Multi-label Classification
+============================================================
+Micro F1:          0.5913
+Macro F1:          0.3884
+Micro Precision:   0.7435
+Micro Recall:      0.4908
+Hamming Loss:      0.0383
+Exact Match Ratio: 0.3599 (1424/3957)
+
+Per-target F1 scores (bottom 10):
+  target_origin_other                      0.000
+  target_gender_other                      0.000
+  target_age_other                         0.000
+  target_disability_visually_impaired      0.000
+  target_disability_hearing_impaired       0.000
+  target_disability_unspecific             0.049
+  target_disability_other                  0.073
+  target_age_young_adults                  0.121
+  target_age_middle_aged                   0.141
+  target_sexuality_straight                0.172
+
+============================================================
+SAVING EVALUATION SUMMARY
+============================================================
+ Summary saved to: llama_evaluation_summary.json
+
+============================================================
+EVALUATION COMPLETE!
+============================================================
+
+ KEY METRICS SUMMARY:
+   Overall Accuracy: 67.68%
+   Overall Macro F1: 0.6532
+   Facets Mean MAE:  0.5298
+   Targets Micro F1: 0.5913

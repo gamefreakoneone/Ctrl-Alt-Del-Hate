@@ -1,0 +1,98 @@
+============================================================
+HATE SPEECH MODEL EVALUATION
+============================================================
+
+ Using predictions from: gemma_test_predictions_vllm.jsonl
+
+ Data Summary:
+   Total samples: 3957
+    Valid predictions: 3874 (97.9%)
+    Failed predictions: 83 (2.1%)
+
+============================================================
+EVALUATION RESULTS
+============================================================
+
+============================================================
+OVERALL: Label Classification (hateful/neutral/supportive)
+============================================================
+Accuracy:        0.6675
+Macro F1:        0.6352
+Micro F1:        0.6675
+Macro Precision: 0.6480
+Macro Recall:    0.6305
+
+Per-class breakdown:
+              precision    recall  f1-score   support
+
+     hateful       0.73      0.60      0.65      1025
+     neutral       0.48      0.44      0.46      1117
+  supportive       0.74      0.86      0.79      1732
+
+    accuracy                           0.67      3874
+   macro avg       0.65      0.63      0.64      3874
+weighted avg       0.66      0.67      0.66      3874
+
+
+Score Spearman correlation: 0.7857
+
+============================================================
+FACETS: Ordinal Ratings (0-4 scale)
+============================================================
+Mean MAE:              0.5399
+Mean MSE:              0.7190
+Mean Spearman:         0.5727
+Mean Exact Match:      0.5437
+Mean Within-1 Accuracy: 0.9219
+
+Per-facet breakdown:
+Facet                MAE      Exact    Within-1   Spearman  
+------------------------------------------------------------
+sentiment            0.512    0.533    0.958      0.707     
+respect              0.573    0.497    0.935      0.688     
+insult               0.646    0.465    0.898      0.668     
+humiliate            0.681    0.426    0.899      0.627     
+status               0.451    0.591    0.959      0.469     
+dehumanize           0.772    0.390    0.844      0.477     
+violence             0.551    0.569    0.895      0.496     
+genocide             0.329    0.739    0.939      0.416     
+attack_defend        0.528    0.532    0.943      0.575     
+hatespeech           0.355    0.696    0.949      0.603     
+
+============================================================
+TARGETS: Multi-label Classification
+============================================================
+Micro F1:          0.5815
+Macro F1:          0.3655
+Micro Precision:   0.7666
+Micro Recall:      0.4684
+Hamming Loss:      0.0381
+Exact Match Ratio: 0.3702 (1434/3874)
+
+Per-target F1 scores (bottom 10):
+  target_origin_other                      0.000
+  target_gender_other                      0.000
+  target_age_other                         0.000
+  target_disability_visually_impaired      0.000
+  target_disability_hearing_impaired       0.000
+  target_disability_other                  0.000
+  target_age_middle_aged                   0.062
+  target_disability_physical               0.087
+  target_age_young_adults                  0.103
+  target_disability_unspecific             0.129
+
+============================================================
+SAVING EVALUATION SUMMARY
+============================================================
+ Summary saved to: evaluation_summary.json
+  83 samples failed - check failed_predictions_*.jsonl
+
+============================================================
+EVALUATION COMPLETE!
+============================================================
+
+ KEY METRICS SUMMARY:
+   Overall Accuracy: 66.75%
+   Overall Macro F1: 0.6352
+   Facets Mean MAE:  0.5399
+   Targets Micro F1: 0.5815

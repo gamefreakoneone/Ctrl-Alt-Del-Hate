@@ -1,0 +1,97 @@
+============================================================
+BASE LLAMA-3.2-1B-INSTRUCT EVALUATION
+============================================================
+
+📁 Loading predictions from: base_llama_predictions.jsonl
+
+📊 Data Summary:
+   Total samples:        3957
+   Valid predictions:    1617 (40.9%)
+   Failed predictions:   2340 (59.1%)
+
+============================================================
+EVALUATION RESULTS
+============================================================
+
+============================================================
+OVERALL: Label Classification
+============================================================
+Accuracy:        0.3531
+Macro F1:        0.2767
+Micro F1:        0.3531
+Macro Precision: 0.3851
+Macro Recall:    0.4295
+
+Per-class breakdown:
+              precision    recall  f1-score   support
+
+     hateful       0.23      0.99      0.38       310
+     neutral       0.00      0.00      0.00       428
+  supportive       0.92      0.30      0.45       879
+
+    accuracy                           0.35      1617
+   macro avg       0.39      0.43      0.28      1617
+weighted avg       0.55      0.35      0.32      1617
+
+Score Spearman correlation: 0.3844
+
+============================================================
+FACETS: Ordinal Ratings (0-4 scale)
+============================================================
+Mean MAE:               1.5341
+Mean MSE:               3.9827
+Mean Spearman:          0.1247
+Mean Exact Match:       0.2854
+Mean Within-1 Accuracy: 0.5027
+
+Per-facet breakdown:
+Facet                MAE      Exact    Within-1   Spearman  
+------------------------------------------------------------
+sentiment            2.184    0.097    0.278      0.117     
+respect              2.549    0.082    0.181      -0.192    
+insult               1.050    0.339    0.735      0.481     
+humiliate            1.853    0.179    0.378      0.099     
+status               2.427    0.006    0.041      0.073     
+dehumanize           1.439    0.250    0.523      0.085     
+violence             0.627    0.604    0.837      0.080     
+genocide             0.361    0.768    0.912      0.075     
+attack_defend        2.292    0.052    0.168      0.089     
+hatespeech           0.558    0.477    0.975      0.340     
+
+============================================================
+TARGETS: Multi-label Classification
+============================================================
+Micro F1:          0.0904
+Macro F1:          0.0565
+Micro Precision:   0.7736
+Micro Recall:      0.0480
+Hamming Loss:      0.0555
+Exact Match Ratio: 0.0501 (81/1617)
+
+Per-target F1 scores (bottom 10):
+  target_race_pacific_islander             0.000
+  target_race_other                        0.000
+  target_religion_atheist                  0.000
+  target_religion_buddhist                 0.000
+  target_religion_other                    0.000
+  target_origin_migrant_worker             0.000
+  target_origin_specific_country           0.000
+  target_origin_undocumented               0.000
+  target_origin_other                      0.000
+  target_gender_non_binary                 0.000
+
+============================================================
+SAVING EVALUATION SUMMARY
+============================================================
+✅ Summary saved to: base_llama_evaluation.json
+⚠️  2340 samples failed - check base_llama_failed.jsonl
+
+============================================================
+EVALUATION COMPLETE!
+============================================================
+
+📈 KEY METRICS SUMMARY:
+   Overall Accuracy:  35.31%
+   Overall Macro F1:  0.2767
+   Facets Mean MAE:   1.5341
+   Targets Micro F1:  0.0904

@@ -1,0 +1,97 @@
+============================================================
+BASE GEMMA-3-1B-IT EVALUATION
+============================================================
+
+📁 Loading predictions from: base_gemma_predictions.jsonl
+
+📊 Data Summary:
+   Total samples:        3957
+   Valid predictions:    25 (0.6%)
+   Failed predictions:   3932 (99.4%)
+
+============================================================
+EVALUATION RESULTS
+============================================================
+
+============================================================
+OVERALL: Label Classification
+============================================================
+Accuracy:        0.2800
+Macro F1:        0.2169
+Micro F1:        0.2800
+Macro Precision: 0.2020
+Macro Recall:    0.3889
+
+Per-class breakdown:
+              precision    recall  f1-score   support
+
+     hateful       0.27      1.00      0.43         6
+     neutral       0.33      0.17      0.22         6
+  supportive       0.00      0.00      0.00        13
+
+    accuracy                           0.28        25
+   macro avg       0.20      0.39      0.22        25
+weighted avg       0.15      0.28      0.16        25
+
+Score Spearman correlation: 0.4216
+
+============================================================
+FACETS: Ordinal Ratings (0-4 scale)
+============================================================
+Mean MAE:               1.6960
+Mean MSE:               4.5040
+Mean Spearman:          nan
+Mean Exact Match:       0.2360
+Mean Within-1 Accuracy: 0.4320
+
+Per-facet breakdown:
+Facet                MAE      Exact    Within-1   Spearman  
+------------------------------------------------------------
+sentiment            2.920    0.040    0.040      0.225     
+respect              2.840    0.040    0.040      0.015     
+insult               1.440    0.200    0.520      0.073     
+humiliate            1.480    0.160    0.600      0.239     
+status               2.360    0.000    0.080      0.207     
+dehumanize           1.640    0.160    0.400      nan       
+violence             1.040    0.280    0.760      nan       
+genocide             0.480    0.720    0.880      nan       
+attack_defend        2.440    0.000    0.080      nan       
+hatespeech           0.320    0.760    0.920      nan       
+
+============================================================
+TARGETS: Multi-label Classification
+============================================================
+Micro F1:          0.0000
+Macro F1:          0.0000
+Micro Precision:   0.0000
+Micro Recall:      0.0000
+Hamming Loss:      0.0539
+Exact Match Ratio: 0.0000 (0/25)
+
+Per-target F1 scores (bottom 10):
+  target_race_asian                        0.000
+  target_race_black                        0.000
+  target_race_latinx                       0.000
+  target_race_middle_eastern               0.000
+  target_race_native_american              0.000
+  target_race_pacific_islander             0.000
+  target_race_white                        0.000
+  target_race_other                        0.000
+  target_religion_atheist                  0.000
+  target_religion_buddhist                 0.000
+
+============================================================
+SAVING EVALUATION SUMMARY
+============================================================
+✅ Summary saved to: base_gemma_evaluation.json
+⚠️  3932 samples failed - check base_gemma_failed.jsonl
+
+============================================================
+EVALUATION COMPLETE!
+============================================================
+
+📈 KEY METRICS SUMMARY:
+   Overall Accuracy:  28.00%
+   Overall Macro F1:  0.2169
+   Facets Mean MAE:   1.6960
+   Targets Micro F1:  0.0000
